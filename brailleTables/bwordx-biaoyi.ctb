@@ -1,0 +1,3 @@
+# BWordX 汉语表意盲文占位表：真正的翻译由全局插件接管（见 globalPlugins/bwordx）。
+# 插件没加载或出错时，退回到下面这张表（通用盲文），保证至少能显示。
+include zh-chn.ctb
