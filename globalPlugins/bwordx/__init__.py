@@ -23,7 +23,10 @@ TABLES = {
 }
 _here = os.path.dirname(os.path.abspath(__file__))
 # addon 根目录/lib/x86 或 x64
-_dll_path = os.path.join(_here, "..", "..", "lib", "x64" if struct.calcsize("P") == 8 else "x86", "braille_ffi.dll")
+_lib_dir = os.path.abspath(os.path.join(_here, "..", "..", "lib"))
+_dll_path = os.path.join(_lib_dir, "x64" if struct.calcsize("P") == 8 else "x86", "braille_ffi.dll")
+# 字库、词库等数据（加密压缩过，两种位数共用一份）
+_data_dir = os.path.join(_lib_dir, "data")
 
 _lock = threading.Lock()
 _lib = None
@@ -46,6 +49,14 @@ def _load():
         lib.bw_set_scheme.restype = ctypes.c_void_p
         lib.bw_set_scheme.argtypes = [ctypes.c_void_p, ctypes.c_char_p]
         lib.bw_set_layout.argtypes = [ctypes.c_void_p] + [ctypes.c_uint32] * 5
+        if os.path.isdir(_data_dir):
+            # 必须在第一次翻译前设好；返回值是缺文件的提示，这里只管释放
+            lib.bw_set_data_dir.restype = ctypes.c_void_p
+            lib.bw_set_data_dir.argtypes = [ctypes.c_char_p]
+            res = lib.bw_set_data_dir(_data_dir.encode("utf-8"))
+            if res:
+                log.info("BWordX: 数据目录 %s，%s", _data_dir, ctypes.string_at(res).decode("utf-8", "replace"))
+                lib.bw_string_free(res)
         engine = lib.bw_new()
         if not engine:
             raise RuntimeError("bw_new 返回空指针")
