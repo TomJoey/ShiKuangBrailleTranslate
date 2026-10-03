@@ -25,6 +25,8 @@ name = re.search(r"^name\s*=\s*(\S+)", open(os.path.join(here, "manifest.ini"), 
 out = os.path.join(here, f"{name}-{version}.nvda-addon")
 with zipfile.ZipFile(out, "w", zipfile.ZIP_DEFLATED) as z:
     z.write(os.path.join(here, "manifest.ini"), "manifest.ini")
+    for doc in ("LICENSE", "THIRD_PARTY_NOTICES.md"):
+        z.write(os.path.join(here, doc), doc)
     for sub in ("globalPlugins", "brailleTables"):
         for d, _, files in os.walk(os.path.join(here, sub)):
             for f in files:

@@ -14,3 +14,6 @@ Chinese Braille translator for NVDA braille displays (Mandarin, pinyin, Braille 
 翻译引擎是 `braille_ffi.dll`（32 位 / 64 位各一个，放在安装包的 `lib/x86`、`lib/x64`），不在本仓库里。
 
 插件把 NVDA 的 `louisHelper.translate` 换成对引擎的调用；任何出错都退回 liblouis 自带的 `zh-chn` 表。
+
+## 许可证
+插件的 Python 源码以 **GNU GPL v2** 发布，见 [LICENSE](LICENSE)。引擎 DLL 和数据文件是二进制形式随安装包发布，用到的第三方库和数据的许可证见 [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md)。
